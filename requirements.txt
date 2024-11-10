@@ -1,0 +1,7 @@
+scikit-learn # replaces sklearn, which is deprecated
+numpy
+pandas
+plotly
+matplotlib
+statsmodels
+pre-commit

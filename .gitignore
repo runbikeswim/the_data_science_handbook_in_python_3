@@ -1,0 +1,59 @@
+# windows executables
+*.exe
+
+# ignore most vscode settings
+**/.vscode
+
+# .. except for launch settings
+!**/.vscode/launch.json
+
+# node modules
+node_modules
+jspm_packages
+package.json
+package-lock.json
+
+# TypeScript cache
+*.tsbuildinfo
+
+# ignore JavaScript-files in the typescript-Folder
+**/typescript/*.js
+
+# Optional REPL history
+.node_repl_history
+
+# folder containing binaries
+bin
+venv
+
+# python cache files
+__pycache__
+*.py[cod]
+
+# C extensions
+*.so
+
+# java/scala extensions
+*.class
+*.tasty
+
+# database files 
+*.db
+*.db-journal
+
+# log files 
+*.log
+*.log.?
+
+# directories for checkpoints used for jupyter notebooks
+.ipynb_checkpoints
+
+# data directories
+**/data/*
+!tests/data/
+!data/example.csv
+
+# configuration folder
+conf 
+
+
