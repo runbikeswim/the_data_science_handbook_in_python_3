@@ -7,74 +7,73 @@ change directory to chapter04_string_manipulation and then execute
 
 import pandas as pd
 
-def get_first_last_name(text:str) -> tuple[str, str]:
+FILENAME = "file.tsv"
+COLUMNS_SEPARATOR = "|"
+NAME_PARTS_TO_BE_SKIPPED = ["mr ", "ms", "mrs", "dr", "jr", "sir"]
+
+def get_first_last_name(name:str) -> tuple[str, str]:
     """
-    extracts the first and last name from a given text
+    extracts the first and last name from a given string containing all parts
     """
 
-    PARTS_TO_BE_SKIPPED = ["mr ", "ms", "mrs", "dr", "jr", "sir "]
+    name_parts = name.lower().replace(".", "").strip().split()
 
-    parts = text.lower().replace(".", "").strip().split()
-
-    parts = (
+    filtered_and_capitalized_parts = (
             [
-                p.capitalize() for p in parts
-                    if p not in PARTS_TO_BE_SKIPPED
+                p.capitalize() for p in name_parts
+                    if p not in NAME_PARTS_TO_BE_SKIPPED
             ]
         )
 
-    match len(parts):
+    match len(filtered_and_capitalized_parts):
+
         case 0:
-            raise ValueError("Name %s is formatted wrong " % text)
+            raise ValueError(f"Name '{name}' is formatted wrong")
+
         case 1:
-            first, last = "", parts[0]
+            first_name =  ""
+            last_name = filtered_and_capitalized_parts[0]
+
         case _:
-            first, last = " ".join(parts[0:-1]), parts[-1]
+            first_name = " ".join(filtered_and_capitalized_parts[0:-1])
+            last_name = filtered_and_capitalized_parts[-1]
 
-    return first, last
+    return first_name, last_name
 
-def format_age(s):
 
-    chars = list(s) # list of characters
-    digit_chars = [c for c in chars if c.isdigit()]
+def extract_number(age_string: str) -> int:
+    """
+    converts a string containing numbers into an integer
+    """
+
+    digit_chars = [c for c in age_string if c.isdigit()]
+
     return int("".join(digit_chars))
 
-def format_date(s):
 
-    MONTH_MAP = {
-            "jan": "01", "feb": "02", "may": "03"
-        }
+print(f"reading data from file '{FILENAME}' ...")
+people = pd.read_csv(FILENAME, sep = COLUMNS_SEPARATOR)
 
-    s = s.strip().lower().replace(",", "")
-    m, d, y = s.split()
-    if len(y) == 2: 
-        y = "19" + y
-
-    if len(d) == 1: 
-        d = "0" + d
-
-    return y + "-" + MONTH_MAP[m[:3]] + "-" + d
-
-df = pd.read_csv("file.tsv", sep="|")
-
-df["First Name"] = (
-        df["Name"]
+print("extracting first and last name ...")
+first_name_last_name = (
+        people["Name"]
         .map(
-            lambda s: get_first_last_name(s)[0]
+            get_first_last_name
         )
     )
 
-df["Last Name"] = (
-        df["Name"]
-        .map(
-            lambda s: get_first_last_name(s)[1]
-        )
+people["First Names"] = first_name_last_name.map(lambda t: t[0])
+
+people["Last Name"] = first_name_last_name.map(lambda t: t[1])
+
+print("converting age ...")
+people["Age (converted)"] = people["Age"].map(extract_number)
+
+print("converting birthdate ...")
+people["Birthdate (converted)"] = (
+        pd.to_datetime(people["Birthdate"], format="mixed")
     )
 
-df["Age"] = df["Age"].map(format_age)
+people.info()
 
-df["Birthdate"] = (
-        pd.to_datetime(df["Birthdate"], format="mixed")
-    )
-
-print(df)
+print(people)
