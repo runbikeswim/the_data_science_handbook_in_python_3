@@ -9,7 +9,7 @@ import pandas as pd
 
 FILENAME = "file.tsv"
 COLUMNS_SEPARATOR = "|"
-NAME_PARTS_TO_BE_SKIPPED = ["mr ", "ms", "mrs", "dr", "jr", "sir"]
+NAME_PARTS_TO_BE_SKIPPED = ["mr ", "ms", "mrs", "dr", "jr", "sr", "sir"]
 
 def get_first_last_name(name:str) -> tuple[str, str]:
     """
@@ -41,15 +41,18 @@ def get_first_last_name(name:str) -> tuple[str, str]:
     return first_name, last_name
 
 
-def extract_number(age_string: str) -> int:
+def extract_number(age_string: str) -> int|float:
     """
     converts a string containing numbers into an integer
     """
 
-    digit_chars = [c for c in age_string if c.isdigit()]
+    try:
+        digit_chars = [c for c in age_string if c.isdigit()]
 
-    return int("".join(digit_chars))
-
+        return int("".join(digit_chars))
+    
+    except TypeError:
+        return float("nan")
 
 print(f"reading data from file '{FILENAME}' ...")
 people = pd.read_csv(FILENAME, sep = COLUMNS_SEPARATOR)
@@ -63,10 +66,8 @@ first_name_last_name = (
     )
 
 people["First Names"] = first_name_last_name.map(lambda t: t[0])
-
 people["Last Name"] = first_name_last_name.map(lambda t: t[1])
 
-print("converting age ...")
 people["Age (converted)"] = people["Age"].map(extract_number)
 
 print("converting birthdate ...")
