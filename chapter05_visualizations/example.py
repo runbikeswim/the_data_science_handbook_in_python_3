@@ -5,16 +5,27 @@ import sklearn.datasets
 # Loading data
 
 def get_iris_df():
-  ds = sklearn.datasets.load_iris()
-  df = pd.DataFrame(ds['data'],
-    columns = ds['feature_names'])
-  code_species_map = dict(zip(
-    range(3), ds['target_names']))
-  df['species'] = [code_species_map[c]
-    for c in ds['target']]
-  return df
-df = get_iris_df()
 
+  ds = sklearn.datasets.load_iris()
+  df = pd.DataFrame(
+      ds['data'],
+      columns = ds['feature_names']
+    )
+  code_species_map = dict(
+      zip(
+        range(3),
+        ds['target_names']
+      )
+    )
+  
+  df['species'] = [
+    code_species_map[c]
+      for c in ds['target']
+    ]
+  
+  return df
+
+df = get_iris_df()
 
 # Pie charts
 
@@ -55,8 +66,14 @@ plt.suptitle('Iris Histograms', fontsize=20)
 plt.show()
 for spec in df['species'].unique():
   forspec = df[df['species']==spec]
-  forspec['petal length (cm)'].plot(
-    kind='hist', alpha=0.4, label=spec)
+  (
+    forspec['petal length (cm)']
+    .plot(
+        kind='hist', 
+        alpha=0.4, 
+        label=spec
+    )
+  )
 plt.legend(loc='upper right')
 plt.suptitle('Petal Length by Species')
 plt.savefig('iris_hist_by_spec.jpg')
@@ -78,15 +95,19 @@ Clean_Avg = col[(col>Perc25)&(col<Perc75)].mean()
 
 # Boxplots
 
-col = ’sepal length (cm)’
+col = 'sepal length (cm)'
 df['ind'] = pd.Series(df.index).apply(lambda i: i% 50)
-df.pivot('ind','species')[col].plot(kind='box') plt.show()
+df.pivot('ind','species')[col].plot(kind='box')
+plt.show()
 
 
 # Scatterplots
 
-df.plot(kind="scatter",
-    x="sepal length (cm)", y="sepal width (cm)")
+df.plot(
+  kind="scatter",
+  x="sepal length (cm)", 
+  y="sepal width (cm)"
+)
 plt.title("Length vs Width")
 plt.show()
 
@@ -109,19 +130,21 @@ plt.show()
 import pandas as pd
 import sklearn.datasets as ds
 import matplotlib.pyplot as plt
+
 # Make Pandas dataframe
 bs = ds.load_boston()
 df = pd.DataFrame(bs.data, columns=bs.feature_names)
 df['MEDV'] = bs.target
 # Normal Scatterplot
 df.plot(x='CRIM', y='MEDV', kind='scatter', logx=True)
-plt.title(’Crime rate on logarithmic axis’)
+plt.title('Crime rate on logarithmic axis')
 plt.show()
 
 # Scatter matrices
 
 plt.close()
 from pandas.tools.plotting import scatter_matrix
+
 scatter_matrix(df)
 plt.show()
 
@@ -151,8 +174,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 # Get raw CSV data from the web
-URL = ("http://ichart.finance.yahoo.com/" +
-    "table.csv?s=GOOG&c=2000")
+URL = (
+    "http://ichart.finance.yahoo.com/" 
+    "table.csv?s=GOOG&c=2000"
+  )
+
 dat = urllib.urlopen(URL).read()
 open('foo.csv','w').write(dat)
 # Make DataFrame, w timestamp as the index
@@ -165,6 +191,3 @@ plt.show()
 df['Close'].plot(logy=True)
 plt.title("Logarithmic Axis")
 plt.show()
-
-
-

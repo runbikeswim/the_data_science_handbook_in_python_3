@@ -1,7 +1,9 @@
 scikit-learn # replaces sklearn, which is deprecated
+jupyter
 numpy
 pandas
 plotly
 matplotlib
 statsmodels
 pre-commit
+yfinance 

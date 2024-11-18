@@ -53,6 +53,10 @@ __pycache__
 !tests/data/
 !data/example.csv
 
+# images
+*.jpg
+*.png
+
 # configuration folder
 conf 
 
